@@ -16,7 +16,7 @@ public class ProdutoDao implements ICRUD {
 
 	@Override
 	public Produto salvar(Produto prod) {
-	    String sql = "insert into tb_produtos(descricao, preco) values(?, ?)";
+		String sql = "insert into tb_produtos(descricao, preco, estoque) values(?, ?, ?)";
 
 	    Connection con = ConectaDB.conectar();
 
@@ -25,6 +25,8 @@ public class ProdutoDao implements ICRUD {
 
 	        stm.setString(1, prod.getDescricao());
 	        stm.setDouble(2, prod.getPreco());
+	        stm.setInt(3, prod.getEstoque());
+	        
 
 	        stm.executeUpdate();
 
@@ -92,7 +94,7 @@ public class ProdutoDao implements ICRUD {
 
 	@Override
 	public void alterar(Produto prod) {
-        String sql = "update tb_produtos set descricao = ?, preco = ? where id = ?";
+		String sql = "update tb_produtos set descricao = ?, preco = ?, estoque = ? where id = ?";
 		
 		Connection con = ConectaDB.conectar();
 		try {
@@ -100,6 +102,8 @@ public class ProdutoDao implements ICRUD {
 			stm.setString(1, prod.getDescricao());
 			stm.setDouble(2, prod.getPreco());
 			stm.setInt(3, prod.getId());
+	        stm.setInt(4, prod.getId());
+
 			stm.execute();			
 			
 			stm.close();
@@ -125,7 +129,8 @@ public class ProdutoDao implements ICRUD {
 	            produto = new Produto(
 	                rs.getInt(1),
 	                rs.getString(2),
-	                rs.getDouble(3)
+	                rs.getDouble(3),
+	                rs.getInt(4)
 	            );
 	        }
 
@@ -146,19 +151,33 @@ public class ProdutoDao implements ICRUD {
 
 	@Override
 	public List<Produto> consultar() {
-		List<Produto> produtos = new ArrayList<Produto>();
-		Connection con = ConectaDB.conectar();
-		try {
-			PreparedStatement stm = con.prepareStatement("select * from tb_Produtos");
-			ResultSet rs = stm.executeQuery();
-			while(rs.next()) {
-				Produto p = new Produto(rs.getInt(1),rs.getString(2),rs.getDouble(3));
-				produtos.add(p);
-			}
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return produtos;
-		}
+	    List<Produto> produtos = new ArrayList<Produto>();
+	    Connection con = ConectaDB.conectar();
+
+	    try {
+	        PreparedStatement stm = con.prepareStatement("select * from tb_produtos");
+	        ResultSet rs = stm.executeQuery();
+
+	        while (rs.next()) {
+	            Produto p = new Produto(
+	                rs.getInt("id"),
+	                rs.getString("descricao"),
+	                rs.getDouble("preco"),
+	                rs.getInt("estoque")
+	            );
+
+	            produtos.add(p);
+	        }
+
+	        rs.close();
+	        stm.close();
+	        con.close();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return produtos;
+	}
 }
 

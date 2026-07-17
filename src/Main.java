@@ -1,4 +1,7 @@
 import java.util.Scanner;
+
+import dao.ClienteDao;
+import modelos.Cliente;
 import modelos.Produto;
 import java.util.List;
 import dao.ProdutoDao;
@@ -7,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        /*Scanner sc = new Scanner(System.in);
         ProdutoDao dao = new ProdutoDao();
 
         int opcao;
@@ -36,7 +39,11 @@ public class Main {
         	    double preco = sc.nextDouble();
         	    sc.nextLine();
         	    
-        	    Produto produto = new Produto(descricao, preco);
+        	    System.out.print("Estoque: ");
+        	    int estoque = sc.nextInt();
+        	    sc.nextLine();
+        	    
+        	    Produto produto = new Produto(descricao, preco, estoque);
         	    
         	    Produto retorno = dao.salvar(produto);
         	    
@@ -57,7 +64,8 @@ public class Main {
         	        System.out.println(
         	            p.getId() + " | " +
         	            p.getDescricao() + " | R$ " +
-        	            p.getPreco()
+        	            p.getPreco() + " | Estoque: " + 
+        	            p.getEstoque()
         	        );
         	    }
 
@@ -97,6 +105,7 @@ public class Main {
 
         	        System.out.println("Descrição atual: " + produto.getDescricao());
         	        System.out.println("Preço atual: " + produto.getPreco());
+        	        System.out.println("Estoque atual" + produto.getEstoque());
 
         	        System.out.print("Nova descrição: ");
         	        String descricao = sc.nextLine();
@@ -104,6 +113,12 @@ public class Main {
         	        System.out.print("Novo preço: ");
         	        double preco = sc.nextDouble();
         	        sc.nextLine();
+        	        
+        	        System.out.print("Novo estoque: ");
+        	        int estoque = sc.nextInt();
+        	        sc.nextLine();
+
+        	        produto.setEstoque(estoque);
 
         	        produto.setDescricao(descricao);
         	        produto.setPreco(preco);
@@ -141,9 +156,72 @@ public class Main {
         	    System.out.println("Opção inválida.");
         	}
 
-        } while (opcao != 0);
+        } while (opcao != 0);*/
 
-        // sc.close();
+    	/*ClienteDao dao = new ClienteDao();
+
+        Cliente cli = new Cliente(
+            "12345678900",
+            "Marcelo",
+            "marcelo@email.com",
+            "Rua A",
+            100,
+            "Centro",
+            "89000000",
+            "Blumenau",
+            "SC"
+        );
+
+        Cliente retorno = dao.salvar(cli);
+
+        System.out.println(
+            retorno.getId() + " - " + retorno.getNome()
+        );*/
+  
+    	/*ClienteDao dao = new ClienteDao();
+    	Cliente cli = dao.consultar(1);
+
+    	System.out.println(cli.getNome());
+    	System.out.println(cli.getEmail());*/
+    	
+    	 /*ClienteDao dao = new ClienteDao();
+
+         List<Cliente> lista = dao.consultar();
+
+         System.out.println("----- CLIENTES CADASTRADOS -----");
+
+         for (Cliente cli : lista) {
+
+             System.out.println(
+                 "ID: " + cli.getId() +
+                 " | Nome: " + cli.getNome() +
+                 " | Email: " + cli.getEmail()
+             );
+
+         }
+
+         System.out.println("-------------------------------");*/
+    	
+    	
+    	/*ClienteDao dao = new ClienteDao();
+    	Cliente cli = new Cliente();
+
+    	cli.setId(1);
+    	cli.setCpf("99999999999");
+    	cli.setNome("Marcelo Alterado");
+    	cli.setEmail("novo@email.com");
+
+    	dao.alterar(cli);
+    	
+    	Cliente teste = dao.consultar(1);
+
+    	System.out.println(teste.getNome());*/
+    	
+    	ClienteDao dao = new ClienteDao();
+    	dao.deletar(1);
+    	
+    	
+    	
     }
 
 }
