@@ -5,12 +5,16 @@ import dao.ClienteDao;
 import dao.ProdutoDao;
 import modelos.Cliente;
 import modelos.Produto;
+import modelos.Pedido;
+import modelos.ItemPedido;
+import dao.ItemPedidoDao;
+import dao.PedidoDao;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+       /* Scanner sc = new Scanner(System.in);
 
         ProdutoDao produtoDao = new ProdutoDao();
         ClienteDao clienteDao = new ClienteDao();
@@ -264,21 +268,149 @@ public class Main {
                         break;
                     }
 
-                    case 2:
-                        // Listar clientes
-                        break;
+                    case 2: {
 
-                    case 3:
-                        // Consultar cliente
-                        break;
+                        List<Cliente> lista = clienteDao.consultar();
 
-                    case 4:
-                        // Alterar cliente
-                        break;
+                        System.out.println("\n------ LISTA DE CLIENTES ------");
 
-                    case 5:
-                        // Excluir cliente
+                        for (Cliente c : lista) {
+
+                            System.out.println(
+                                "ID: " + c.getId() +
+                                " | CPF: " + c.getCpf() +
+                                " | Nome: " + c.getNome() +
+                                " | Email: " + c.getEmail() +
+                                " | Rua: " + c.getRua() +
+                                " | Nº: " + c.getNumero() +
+                                " | Bairro: " + c.getBairro() +
+                                " | CEP: " + c.getCep() +
+                                " | Cidade: " + c.getCidade() +
+                                " | Estado: " + c.getEstado()
+                            );
+
+                        }
+
+                        System.out.println("--------------------------------");
+
                         break;
+                    }
+
+                    case 3: {
+
+                        System.out.print("Digite o ID do cliente: ");
+                        int id = sc.nextInt();
+                        sc.nextLine();
+
+                        Cliente cliente = clienteDao.consultar(id);
+
+                        if (cliente != null) {
+
+                            System.out.println("\n----- CLIENTE ENCONTRADO -----");
+                            System.out.println("ID: " + cliente.getId());
+                            System.out.println("CPF: " + cliente.getCpf());
+                            System.out.println("Nome: " + cliente.getNome());
+                            System.out.println("Email: " + cliente.getEmail());
+                            System.out.println("Rua: " + cliente.getRua());
+                            System.out.println("Número: " + cliente.getNumero());
+                            System.out.println("Bairro: " + cliente.getBairro());
+                            System.out.println("CEP: " + cliente.getCep());
+                            System.out.println("Cidade: " + cliente.getCidade());
+                            System.out.println("Estado: " + cliente.getEstado());
+                            System.out.println("------------------------------");
+
+                        } else {
+
+                            System.out.println("Cliente não encontrado.");
+
+                        }
+
+                        break;
+                    }
+
+                    case 4: {
+
+                        System.out.print("Digite o ID do cliente: ");
+                        int id = sc.nextInt();
+                        sc.nextLine();
+
+                        Cliente cliente = clienteDao.consultar(id);
+
+                        if (cliente != null) {
+
+                            System.out.println("CPF atual: " + cliente.getCpf());
+                            System.out.println("Nome atual: " + cliente.getNome());
+                            System.out.println("Email atual: " + cliente.getEmail());
+                            System.out.println("Rua atual: " + cliente.getRua());
+                            System.out.println("Número atual: " + cliente.getNumero());
+                            System.out.println("Bairro atual: " + cliente.getBairro());
+                            System.out.println("CEP atual: " + cliente.getCep());
+                            System.out.println("Cidade atual: " + cliente.getCidade());
+                            System.out.println("Estado atual: " + cliente.getEstado());
+
+                            System.out.print("Novo CPF: ");
+                            cliente.setCpf(sc.nextLine());
+
+                            System.out.print("Novo Nome: ");
+                            cliente.setNome(sc.nextLine());
+
+                            System.out.print("Novo Email: ");
+                            cliente.setEmail(sc.nextLine());
+
+                            System.out.print("Nova Rua: ");
+                            cliente.setRua(sc.nextLine());
+
+                            System.out.print("Novo Número: ");
+                            cliente.setNumero(sc.nextInt());
+                            sc.nextLine();
+
+                            System.out.print("Novo Bairro: ");
+                            cliente.setBairro(sc.nextLine());
+
+                            System.out.print("Novo CEP: ");
+                            cliente.setCep(sc.nextLine());
+
+                            System.out.print("Nova Cidade: ");
+                            cliente.setCidade(sc.nextLine());
+
+                            System.out.print("Novo Estado: ");
+                            cliente.setEstado(sc.nextLine());
+
+                            clienteDao.alterar(cliente);
+
+                            System.out.println("Cliente alterado com sucesso!");
+
+                        } else {
+
+                            System.out.println("Cliente não encontrado.");
+
+                        }
+
+                        break;
+                    }
+
+                    case 5: {
+
+                        System.out.print("Digite o ID do cliente: ");
+                        int id = sc.nextInt();
+                        sc.nextLine();
+
+                        Cliente cliente = clienteDao.consultar(id);
+
+                        if (cliente != null) {
+
+                            clienteDao.deletar(id);
+
+                            System.out.println("Cliente excluído com sucesso!");
+
+                        } else {
+
+                            System.out.println("Cliente não encontrado.");
+
+                        }
+
+                        break;
+                    }
 
                     case 0:
                         break;
@@ -298,6 +430,27 @@ public class Main {
 
         } while (opcaoPrincipal != 0);
 
-        sc.close();
+        sc.close();*/
+    	Produto p1 = new Produto(1, "Arroz", 25.00, 10);
+    	Produto p2 = new Produto(2, "Feijão", 8.50, 10);
+
+
+    	Pedido pedido = new Pedido();
+
+
+    	pedido.adicionarItem(p1, 2);
+    	pedido.adicionarItem(p2, 3);
+
+
+    	System.out.println("Itens no carrinho: " + pedido.getItens().size());
+
+
+    	pedido.removerItem(1);
+
+
+    	System.out.println("Itens depois da remoção: " + pedido.getItens().size());
+
+     }
+
+ 
     }
-}
