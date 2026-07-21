@@ -15,11 +15,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-       /* Scanner sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
 
         ProdutoDao produtoDao = new ProdutoDao();
         ClienteDao clienteDao = new ClienteDao();
 
+        PedidoDao pedidoDao = new PedidoDao();
+
+        Pedido pedido = null;
+        
         int opcaoPrincipal;
         int opcao;
 
@@ -28,6 +32,7 @@ public class Main {
             System.out.println("\n===== MENU PRINCIPAL =====");
             System.out.println("1 - Produtos");
             System.out.println("2 - Clientes");
+            System.out.println("3 - Pedidos");
             System.out.println("0 - Sair");
 
             System.out.print("Escolha uma opção: ");
@@ -423,58 +428,166 @@ public class Main {
                 } while (opcao != 0);
 
                 break;
+                
+            case 3:
+
+                do {
+
+                    System.out.println("\n===== MENU PEDIDOS =====");
+                    System.out.println("1 - Criar pedido");
+                    System.out.println("2 - Adicionar produto ao carrinho");
+                    System.out.println("3 - Remover produto do carrinho");
+                    System.out.println("4 - Finalizar pedido");
+                    System.out.println("0 - Voltar");
+
+                    System.out.print("Escolha uma opção: ");
+                    opcao = sc.nextInt();
+                    sc.nextLine();
+
+                    switch (opcao) {
+
+                    case 1: {
+
+                        pedido = new Pedido();
+
+                        System.out.print("Digite o ID do cliente: ");
+                        int idCliente = sc.nextInt();
+                        sc.nextLine();
+
+                        Cliente cliente = clienteDao.consultar(idCliente);
+
+                        if (cliente == null) {
+
+                            System.out.println("Cliente não encontrado.");
+                            break;
+
+                        }
+
+                        pedido.setCliente(cliente);
+                        pedido.setData(LocalDate.now());
+                        pedido.setStatus("ABERTO");
+
+                        System.out.println("Pedido criado com sucesso!");
+
+                        break;
+                    }
+
+                    case 2: {
+
+                        if (pedido == null) {
+
+                            System.out.println("Crie um pedido primeiro.");
+                            break;
+
+                        }
+
+                        System.out.print("ID do produto: ");
+                        int idProduto = sc.nextInt();
+
+                        Produto produto = produtoDao.consultar(idProduto);
+
+                        if (produto == null) {
+
+                            System.out.println("Produto não encontrado.");
+                            break;
+
+                        }
+
+                        System.out.print("Quantidade: ");
+                        int quantidade = sc.nextInt();
+                        sc.nextLine();
+
+                        if (produto.getEstoque() < quantidade) {
+
+                            System.out.println("Estoque insuficiente.");
+                            break;
+
+                        }
+
+                        pedido.adicionarItem(produto, quantidade);
+
+                        System.out.println("Produto adicionado ao carrinho.");
+
+                        break;
+                    }
+
+                    case 3: {
+
+                        if (pedido == null) {
+
+                            System.out.println("Nenhum pedido criado.");
+                            break;
+
+                        }
+
+                        System.out.print("Digite o ID do produto que deseja remover: ");
+                        int idProduto = sc.nextInt();
+                        sc.nextLine();
+
+                        pedido.removerItem(idProduto);
+
+                        System.out.println("Produto removido do carrinho.");
+
+                        break;
+                        
+             
+                    }
+                    
+                    case 4: {
+
+                        if (pedido == null) {
+
+                            System.out.println("Crie um pedido primeiro.");
+                            break;
+
+                        }
+
+                        if (pedido.getItens().isEmpty()) {
+
+                            System.out.println("O carrinho está vazio.");
+                            break;
+
+                        }
+
+                        pedidoDao.finalizarPedido(pedido);
+
+                        pedido = null;
+
+                        System.out.println("Pedido finalizado com sucesso!");
+
+                        break;
+                    }
+
+                    case 0:
+                        break;
+
+                    default:
+                        System.out.println("Opção inválida.");
+                    }
+
+                } while (opcao != 0);
+
+                break;
+
+            case 0:
+                break;
 
             default:
-
                 System.out.println("Opção inválida.");
+
             }
 
         } while (opcaoPrincipal != 0);
 
-        sc.close();*/
-    	
+        sc.close();
 
-
-    	 ClienteDao clienteDao = new ClienteDao();
-         ProdutoDao produtoDao = new ProdutoDao();
-         PedidoDao pedidoDao = new PedidoDao();
-
-         // Cliente existente
-         Cliente cliente = clienteDao.consultar(2);
-
-         if (cliente == null) {
-             System.out.println("Cliente não encontrado.");
-             return;
-         }
-
-         // Produtos existentes
-         Produto produto1 = produtoDao.consultar(17);
-         Produto produto2 = produtoDao.consultar(18);
-
-         if (produto1 == null || produto2 == null) {
-             System.out.println("Produto não encontrado.");
-             return;
-         }
-
-         // Cria o pedido
-         Pedido pedido = new Pedido();
-         pedido.setCliente(cliente);
-         pedido.setData(LocalDate.now());
-         pedido.setStatus("FINALIZADO");
-
-         // Adiciona os itens
-         pedido.adicionarItem(produto1, 2);
-         pedido.adicionarItem(produto2, 1);
-
-         // Finaliza o pedido
-         pedidoDao.finalizarPedido(pedido);
-
-
-    	    }
-
-    	
-    	
     }
+
+}
+
+    	
+    	
+    
     
 
     	
