@@ -9,6 +9,7 @@ import modelos.Pedido;
 import modelos.ItemPedido;
 import dao.ItemPedidoDao;
 import dao.PedidoDao;
+import java.time.LocalDate;
 
 public class Main {
 
@@ -431,26 +432,54 @@ public class Main {
         } while (opcaoPrincipal != 0);
 
         sc.close();*/
-    	Produto p1 = new Produto(1, "Arroz", 25.00, 10);
-    	Produto p2 = new Produto(2, "Feijão", 8.50, 10);
+    	
 
 
-    	Pedido pedido = new Pedido();
+    	 ClienteDao clienteDao = new ClienteDao();
+         ProdutoDao produtoDao = new ProdutoDao();
+         PedidoDao pedidoDao = new PedidoDao();
+
+         // Cliente existente
+         Cliente cliente = clienteDao.consultar(2);
+
+         if (cliente == null) {
+             System.out.println("Cliente não encontrado.");
+             return;
+         }
+
+         // Produtos existentes
+         Produto produto1 = produtoDao.consultar(17);
+         Produto produto2 = produtoDao.consultar(18);
+
+         if (produto1 == null || produto2 == null) {
+             System.out.println("Produto não encontrado.");
+             return;
+         }
+
+         // Cria o pedido
+         Pedido pedido = new Pedido();
+         pedido.setCliente(cliente);
+         pedido.setData(LocalDate.now());
+         pedido.setStatus("FINALIZADO");
+
+         // Adiciona os itens
+         pedido.adicionarItem(produto1, 2);
+         pedido.adicionarItem(produto2, 1);
+
+         // Finaliza o pedido
+         pedidoDao.finalizarPedido(pedido);
 
 
-    	pedido.adicionarItem(p1, 2);
-    	pedido.adicionarItem(p2, 3);
+    	    }
 
-
-    	System.out.println("Itens no carrinho: " + pedido.getItens().size());
-
-
-    	pedido.removerItem(1);
-
-
-    	System.out.println("Itens depois da remoção: " + pedido.getItens().size());
-
-     }
-
- 
+    	
+    	
     }
+    
+
+    	
+    	
+    	
+
+
+    	   

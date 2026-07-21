@@ -10,62 +10,130 @@ import java.util.List;
 
 import utils.ConectaDB;
 import interfaces.ICRUDPedido;
+import modelos.ItemPedido;
 import modelos.Pedido;
 
 public class PedidoDao implements ICRUDPedido {
 
-	@Override
-	public Pedido salvar(Pedido pedido) {
 
-	    String sql = "insert into tb_pedidos(id_cliente, data, status) values (?, ?, ?)";
+    @Override
+    public Pedido salvar(Pedido pedido) {
 
-	    Connection con = ConectaDB.conectar();
+        String sql = "insert into tb_pedidos(id_cliente, data, status) values (?, ?, ?)";
 
-	    try { 
-	    	PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-	    	stm.setInt(1, pedido.getCliente().getId());
-	    	stm.setDate(2, Date.valueOf(pedido.getData()));
-	    	stm.setString(3, pedido.getStatus());
-	    	
-	    	stm.executeUpdate();
+        Connection con = ConectaDB.conectar();
 
-	    	ResultSet rs = stm.getGeneratedKeys();
+        try {
 
-	    	if (rs.next()) {
-	    	    pedido.setId(rs.getInt(1));
-	    	}
+            PreparedStatement stm = con.prepareStatement(
+                    sql,
+                    Statement.RETURN_GENERATED_KEYS
+            );
 
-	    	rs.close();
-	    	stm.close();
-	    	con.close();
+            stm.setInt(1, pedido.getCliente().getId());
+            stm.setDate(2, Date.valueOf(pedido.getData()));
+            stm.setString(3, pedido.getStatus());
 
-	    	return pedido;
+            stm.executeUpdate();
 
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+            ResultSet rs = stm.getGeneratedKeys();
 
-	    return null;
-	}
+            if (rs.next()) {
+
+                pedido.setId(rs.getInt(1));
+
+            }
+
+            rs.close();
+            stm.close();
+            con.close();
+
+            return pedido;
+
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+
+        }
+
+        return null;
+
+    }
+
+
+
+    public void finalizarPedido(Pedido pedido) {
+
+        Pedido pedidoSalvo = salvar(pedido);
+
+        if (pedidoSalvo != null) {
+
+            ItemPedidoDao itemDao = new ItemPedidoDao();
+            ProdutoDao produtoDao = new ProdutoDao();
+
+
+            for (ItemPedido item : pedidoSalvo.getItens()) {
+
+
+                item.setIdPedido(pedidoSalvo.getId());
+
+
+                itemDao.adicionar(item);
+
+
+                produtoDao.atualizarEstoque(
+                        item.getIdProduto(),
+                        item.getQuantidade()
+                );
+
+            }
+
+
+            System.out.println("Pedido finalizado com sucesso!");
+
+
+        } else {
+
+
+            System.out.println("Erro ao finalizar pedido.");
+
+
+        }
+
+    }
+
+
 
     @Override
     public void alterar(Pedido pedido) {
 
     }
 
+
+
     @Override
     public void deletar(int id) {
 
     }
 
+
+
     @Override
     public Pedido consultar(int id) {
+
         return null;
+
     }
+
+
 
     @Override
     public List<Pedido> consultar() {
+
         return null;
+
     }
+
 
 }
